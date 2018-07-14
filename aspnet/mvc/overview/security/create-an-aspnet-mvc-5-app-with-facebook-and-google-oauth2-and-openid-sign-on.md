@@ -4,12 +4,8 @@ title: "Create MVC 5 App with Facebook, Twitter, LinkedIn and Google OAuth2 Sign
 author: Rick-Anderson
 description: "This tutorial shows you how to build an ASP.NET MVC 5 web application that enables users to log in using OAuth 2.0 with credentials from an external authenti..."
 ms.author: aspnetcontent
-manager: wpickett
 ms.date: 04/03/2015
-ms.topic: article
 ms.assetid: 81ee500f-fc37-40d6-8722-f1b64720fbb6
-ms.technology: dotnet-mvc
-ms.prod: .net-framework
 msc.legacyurl: /mvc/overview/security/create-an-aspnet-mvc-5-app-with-facebook-and-google-oauth2-and-openid-sign-on
 msc.type: authoredcontent
 ---
@@ -169,7 +165,7 @@ For Facebook OAuth2 authentication, you need to copy to your project some settin
     ![Create new app](create-an-aspnet-mvc-5-app-with-facebook-and-google-oauth2-and-openid-sign-on/_static/image22.png)
 4. Enter an **App Name** and **Category**, then click **Create App**.
 
-    This must be unique across Facebook. The <strong>App Namespace</strong> is the part of the URL that your App will use to access the Facebook application for authentication (for example, https://apps.facebook.com/{App Namespace}). If you don't specify an <strong>App Namespace</strong>, the <strong>App ID</strong> will be used for the URL. The <strong>App ID</strong> is a long system-generated number that you will see in the next step.
+    The <strong>App Namespace</strong> is the part of the URL that your App will use to access the Facebook application for authentication (for example, https\://apps.facebook.com/{App Namespace}). If you don't specify an <strong>App Namespace</strong>, the <strong>App ID</strong> will be used for the URL. The <strong>App ID</strong> is a long system-generated number that you will see in the next step.
 
     ![Create New App dialog](create-an-aspnet-mvc-5-app-with-facebook-and-google-oauth2-and-openid-sign-on/_static/image23.png)
 5. Submit the standard security check.

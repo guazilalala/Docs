@@ -2,12 +2,8 @@
 title: Razor syntax reference for ASP.NET Core
 author: rick-anderson
 description: Learn about Razor markup syntax for embedding server-based code into webpages.
-manager: wpickett
 ms.author: riande
 ms.date: 10/18/2017
-ms.prod: asp.net-core
-ms.technology: aspnet
-ms.topic: article
 uid: mvc/views/razor
 ---
 # Razor syntax reference for ASP.NET Core
@@ -104,19 +100,7 @@ Explicit expressions can be used to concatenate text with an expression result:
 
 Without the explicit expression, `<p>Age@joe.Age</p>` is treated as an email address, and `<p>Age@joe.Age</p>` is rendered. When written as an explicit expression, `<p>Age33</p>` is rendered.
 
-
-Explicit expressions can be used to render output from generic methods in *.cshtml* files. In an implicit expression, the characters inside the brackets (`<>`) are interpreted as an HTML tag. The following markup is **not** valid Razor:
-
-```cshtml
-<p>@GenericMethod<int>()</p>
-```
-
-The preceding code generates a compiler error similar to one of the following:
-
-* The "int" element wasn't closed. All elements must be either self-closing or have a matching end tag.
-* Cannot convert method group 'GenericMethod' to non-delegate type 'object'. Did you intend to invoke the method?` 
- 
-  The following markup shows the correct way write this code. The code is written as an explicit expression:
+Explicit expressions can be used to render output from generic methods in *.cshtml* files. The following markup shows how to correct the error shown earlier caused by the brackets of a C# generic. The code is written as an explicit expression:
 
 ```cshtml
 <p>@(GenericMethod<int>())</p>
@@ -552,6 +536,7 @@ There are three directives that pertain to [Tag Helpers](xref:mvc/views/tag-help
 ### Razor keywords
 
 * page (Requires ASP.NET Core 2.0 and later)
+* namespace
 * functions
 * inherits
 * model
@@ -581,7 +566,6 @@ C# Razor keywords must be double-escaped with `@(@C# Razor Keyword)` (for exampl
 
 ### Reserved keywords not used by Razor
 
-* namespace
 * class
 
 ## Viewing the Razor C# class generated for a view

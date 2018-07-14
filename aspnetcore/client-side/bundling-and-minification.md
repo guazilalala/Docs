@@ -2,14 +2,9 @@
 title: Bundle and minifiy static assets in ASP.NET Core
 author: scottaddie
 description: Learn how to optimize static resources in an ASP.NET Core web application by applying bundling and minification techniques.
-manager: wpickett
 ms.author: scaddie
 ms.custom: mvc
 ms.date: 01/10/2018
-ms.devlang: csharp
-ms.prod: aspnet-core
-ms.technology: aspnet
-ms.topic: article
 uid: client-side/bundling-and-minification
 ---
 # Bundle and minifiy static assets in ASP.NET Core
@@ -215,22 +210,28 @@ Specify which files to include in your pages by using the [Environment Tag Helpe
 
 The following `environment` tag renders the unprocessed CSS files when running in the `Development` environment:
 
-#### [ASP.NET Core 2.x](#tab/aspnetcore2x/)
+# [ASP.NET Core 2.x](#tab/aspnetcore2x/)
+
 [!code-cshtml[](../client-side/bundling-and-minification/samples/BuildBundlerMinifierApp/Pages/_Layout.cshtml?highlight=3&range=21-24)]
 
-#### [ASP.NET Core 1.x](#tab/aspnetcore1x/)
+# [ASP.NET Core 1.x](#tab/aspnetcore1x/)
+
 [!code-cshtml[](../client-side/bundling-and-minification/samples/BuildBundlerMinifierApp/Pages/_Layout.cshtml?highlight=3&range=9-12)]
 
-* * *
+---
+
 The following `environment` tag renders the bundled and minified CSS files when running in an environment other than `Development`. For example, running in `Production` or `Staging` triggers the rendering of these stylesheets:
 
-#### [ASP.NET Core 2.x](#tab/aspnetcore2x/)
+# [ASP.NET Core 2.x](#tab/aspnetcore2x/)
+
 [!code-cshtml[](../client-side/bundling-and-minification/samples/BuildBundlerMinifierApp/Pages/_Layout.cshtml?highlight=5&range=25-30)]
 
-#### [ASP.NET Core 1.x](#tab/aspnetcore1x/)
+# [ASP.NET Core 1.x](#tab/aspnetcore1x/)
+
 [!code-cshtml[](../client-side/bundling-and-minification/samples/BuildBundlerMinifierApp/Pages/_Layout.cshtml?highlight=3&range=13-18)]
 
-* * *
+---
+
 ## Consume bundleconfig.json from Gulp
 
 There are cases in which an app's bundling and minification workflow requires additional processing. Examples include image optimization, cache busting, and CDN asset processing. To satisfy these requirements, you can convert the bundling and minification workflow to use Gulp.
@@ -308,5 +309,5 @@ Alternatively, Visual Studio's Task Runner Explorer may be used to bind Gulp tas
 
 * [Use Gulp](xref:client-side/using-gulp)
 * [Use Grunt](xref:client-side/using-grunt)
-* [Work with Multiple Environments](xref:fundamentals/environments)
+* [Use multiple environments](xref:fundamentals/environments)
 * [Tag Helpers](xref:mvc/views/tag-helpers/intro)

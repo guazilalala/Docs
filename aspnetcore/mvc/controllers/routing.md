@@ -2,12 +2,8 @@
 title: Routing to controller actions in ASP.NET Core
 author: rick-anderson
 description: Learn how ASP.NET Core MVC uses Routing Middleware to match URLs of incoming requests and map them to actions.
-manager: wpickett
 ms.author: riande
 ms.date: 03/14/2017
-ms.prod: asp.net-core
-ms.technology: aspnet
-ms.topic: article
 uid: mvc/controllers/routing
 ---
 # Routing to controller actions in ASP.NET Core
@@ -694,7 +690,7 @@ Conceptually, `IActionConstraint` is a form of *overloading*, but instead of ove
 
 The simplest way to implement an `IActionConstraint` is to create a class derived from `System.Attribute` and place it on your actions and controllers. MVC will automatically discover any `IActionConstraint` that are applied as attributes. You can use the application model to apply constraints, and this is probably the most flexible approach as it allows you to metaprogram how they're applied.
 
-In the following example a constraint chooses an action based on a *country code* from the route data. The [full sample on GitHub](https://github.com/aspnet/Entropy/blob/dev/samples/Mvc.ActionConstraintSample.Web/CountrySpecificAttribute.cs).
+In the following example a constraint chooses an action based on a *country code* from the route data. The [full sample on GitHub](https://github.com/aspnet/Entropy/blob/master/samples/Mvc.ActionConstraintSample.Web/CountrySpecificAttribute.cs).
 
 ```csharp
 public class CountrySpecificAttribute : Attribute, IActionConstraint

@@ -2,12 +2,8 @@
 title: Filters in ASP.NET Core
 author: ardalis
 description: Learn how filters work and how to use them in ASP.NET Core MVC.
-manager: wpickett
 ms.author: riande
 ms.date: 4/10/2018
-ms.prod: asp.net-core
-ms.technology: aspnet
-ms.topic: article
 uid: mvc/controllers/filters
 ---
 
@@ -18,10 +14,10 @@ By [Rick Anderson](https://twitter.com/RickAndMSFT), [Tom Dykstra](https://githu
 *Filters* in ASP.NET Core MVC allow you to run code before or after specific stages in the request processing pipeline.
 
 > [!IMPORTANT]
-> This topic does **not** apply to Razor Pages. ASP.NET Core 2.1 preview and later supports [IPageFilter](/dotnet/api/microsoft.aspnetcore.mvc.filters.ipagefilter?view=aspnetcore-2.0) and [IAsyncPageFilter](/dotnet/api/microsoft.aspnetcore.mvc.filters.iasyncpagefilter?view=aspnetcore-2.0) for Razor Pages. For more information, see [Filter methods for Razor Pages](xref:mvc/razor-pages/filter).
+> This topic does **not** apply to Razor Pages. ASP.NET Core 2.1 and later supports [IPageFilter](/dotnet/api/microsoft.aspnetcore.mvc.filters.ipagefilter?view=aspnetcore-2.0) and [IAsyncPageFilter](/dotnet/api/microsoft.aspnetcore.mvc.filters.iasyncpagefilter?view=aspnetcore-2.0) for Razor Pages. For more information, see [Filter methods for Razor Pages](xref:razor-pages/filter).
 
  Built-in filters handle tasks such as:
- 
+
  * Authorization (preventing access to resources a user isn't authorized for).
  * Ensuring that all requests use HTTPS.
  * Response caching (short-circuiting the request pipeline to return a cached response). 
@@ -62,7 +58,7 @@ Synchronous filters that can run code both before and after their pipeline stage
 
 [!code-csharp[](./filters/sample/src/FiltersSample/Filters/SampleActionFilter.cs?name=snippet1)]
 
-Asynchronous filters define a single On*Stage*ExecutionAsync method. This method takes a *FilterType*ExecutionDelegate delegate which executes the filter's pipeline stage. For example, `ActionExecutionDelegate` calls the action method, and you can execute code before and after you call it.
+Asynchronous filters define a single On*Stage*ExecutionAsync method. This method takes a *FilterType*ExecutionDelegate delegate which executes the filter's pipeline stage. For example, `ActionExecutionDelegate` calls the action method or next action filter, and you can execute code before and after you call it.
 
 [!code-csharp[](./filters/sample/src/FiltersSample/Filters/SampleAsyncActionFilter.cs?highlight=6,8-10,13)]
 
@@ -73,7 +69,7 @@ You can implement interfaces for multiple filter stages in a single class. For e
 
 ### IFilterFactory
 
-`IFilterFactory` implements `IFilter`. Therefore, an `IFilterFactory` instance can be used as an `IFilter` instance anywhere in the filter pipeline. When the framework prepares to invoke the filter, it attempts to cast it to an `IFilterFactory`. If that cast succeeds, the `CreateInstance` method is called to create the `IFilter` instance that will be invoked. This provides a flexible design, since the precise filter pipeline doesn't need to be set explicitly when the app starts.
+[IFilterFactory](/dotnet/api/microsoft.aspnetcore.mvc.filters.ifilterfactory) implements [IFilterMetadata](/dotnet/api/microsoft.aspnetcore.mvc.filters.ifiltermetadata). Therefore, an `IFilterFactory` instance can be used as an `IFilterMetadata` instance anywhere in the filter pipeline. When the framework prepares to invoke the filter, it attempts to cast it to an `IFilterFactory`. If that cast succeeds, the [CreateInstance](/dotnet/api/microsoft.aspnetcore.mvc.filters.ifilterfactory.createinstance) method is called to create the `IFilterMetadata` instance that will be invoked. This provides a flexible design, since the precise filter pipeline doesn't need to be set explicitly when the app starts.
 
 You can implement `IFilterFactory` on your own attribute implementations as another approach to creating filters:
 
@@ -168,7 +164,7 @@ If you have the same 3 Action filters shown in the preceding example but set the
 | 5 | Controller | 1  | `OnActionExecuted` |
 | 6 | Method | 0  | `OnActionExecuted` |
 
-The `Order` property trumps scope when determining the order in which filters will run. Filters are sorted first by order, then scope is used to break ties. All of the built-in filters implement `IOrderedFilter` and set the default `Order` value to 0. Fir built-in filters, scope determines order unless you set `Order` to a non-zero value.
+The `Order` property trumps scope when determining the order in which filters will run. Filters are sorted first by order, then scope is used to break ties. All of the built-in filters implement `IOrderedFilter` and set the default `Order` value to 0. For built-in filters, scope determines order unless you set `Order` to a non-zero value.
 
 ## Cancellation and short circuiting
 
@@ -217,7 +213,7 @@ System.InvalidOperationException: No service for type
 'FiltersSample.Filters.AddHeaderFilterWithDI' has been registered.
 ```
 
-`ServiceFilterAttribute` implements `IFilterFactory`. `IFilterFactory` exposes the `CreateInstance` method for creating an `IFilter` instance. The `CreateInstance` method loads the specified type from the services container (DI).
+`ServiceFilterAttribute` implements `IFilterFactory`. `IFilterFactory` exposes the `CreateInstance` method for creating an `IFilterMetadata` instance. The `CreateInstance` method loads the specified type from the services container (DI).
 
 ### TypeFilterAttribute
 
@@ -280,13 +276,13 @@ Here's a sample action filter:
 
 [!code-csharp[](./filters/sample/src/FiltersSample/Filters/SampleActionFilter.cs?name=snippet_ActionFilter)]
 
-The [ActionExecutingContext](https://docs.microsoft.com/aspnet/core/api/microsoft.aspnetcore.mvc.filters.actionexecutingcontext) provides the following properties:
+The [ActionExecutingContext](/dotnet/api/microsoft.aspnetcore.mvc.filters.actionexecutingcontext) provides the following properties:
 
 * `ActionArguments` - lets you manipulate the inputs to the action.
 * `Controller` - lets you manipulate the controller instance. 
 * `Result` - setting this short-circuits execution of the action method and subsequent action filters. Throwing an exception also prevents execution of the action method and subsequent filters, but is treated as a failure instead of a successful result.
 
-The [ActionExecutedContext](https://docs.microsoft.com/aspnet/core/api/microsoft.aspnetcore.mvc.filters.actionexecutedcontext) provides `Controller` and `Result` plus the following properties:
+The [ActionExecutedContext](/dotnet/api/microsoft.aspnetcore.mvc.filters.actionexecutedcontext) provides `Controller` and `Result` plus the following properties:
 
 * `Canceled` - will be true if the action execution was short-circuited by another filter.
 * `Exception` - will be non-null if the action or a subsequent action filter threw an exception. Setting this property to null effectively 'handles' an exception, and `Result` will be executed as if it were returned from the action method normally.

@@ -2,12 +2,8 @@
 title: Overview of ASP.NET Core MVC
 author: ardalis
 description: Learn how ASP.NET Core MVC is a rich framework for building web apps and APIs using the Model-View-Controller design pattern.
-manager: wpickett
 ms.author: riande
 ms.date: 01/08/2018
-ms.prod: asp.net-core
-ms.technology: aspnet
-ms.topic: article
 uid: mvc/overview
 ---
 # Overview of ASP.NET Core MVC
@@ -186,7 +182,7 @@ Use link generation to enable support for hypermedia. Easily enable support for 
 
 ### Testability
 
-The framework's use of interfaces and dependency injection make it well-suited to unit testing, and the framework includes features (like a TestHost and InMemory provider for Entity Framework) that make [integration tests](../testing/integration-testing.md) quick and easy as well. Learn more about [how to test controller logic](controllers/testing.md).
+The framework's use of interfaces and dependency injection make it well-suited to unit testing, and the framework includes features (like a TestHost and InMemory provider for Entity Framework) that make [integration tests](xref:test/integration-tests) quick and easy as well. Learn more about [how to test controller logic](controllers/testing.md).
 
 ### Razor view engine
 

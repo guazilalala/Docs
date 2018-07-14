@@ -2,13 +2,9 @@
 title: Host ASP.NET Core on Windows with IIS
 author: guardrex
 description: Learn how to host ASP.NET Core apps on Windows Server Internet Information Services (IIS).
-manager: wpickett
 ms.author: riande
 ms.custom: mvc
 ms.date: 03/13/2018
-ms.prod: asp.net-core
-ms.technology: aspnet
-ms.topic: article
 uid: host-and-deploy/iis/index
 ---
 # Host ASP.NET Core on Windows with IIS
@@ -20,9 +16,7 @@ By [Luke Latham](https://github.com/guardrex) and [Rick Anderson](https://twitte
 The following operating systems are supported:
 
 * Windows 7 or later
-* Windows Server 2008 R2 or later&#8224;
-
-&#8224;Conceptually, the IIS configuration described in this document also applies to hosting ASP.NET Core apps on Nano Server IIS. For instructions specific to Nano Server, see the [ASP.NET Core with IIS on Nano Server](xref:tutorials/nano-server) tutorial.
+* Windows Server 2008 R2 or later
 
 [HTTP.sys server](xref:fundamentals/servers/httpsys) (formerly called [WebListener](xref:fundamentals/servers/weblistener)) doesn't work in a reverse proxy configuration with IIS. Use the [Kestrel server](xref:fundamentals/servers/kestrel).
 
@@ -40,7 +34,7 @@ public static IWebHost BuildWebHost(string[] args) =>
         ...
 ```
 
-The ASP.NET Core Module generates a dynamic port to assign to the back-end process. The `UseIISIntegration` method picks up the dynamic port and configures Kestrel to listen on `http://localhost:{dynamicPort}/`. This overrides other URL configurations, such as calls to `UseUrls` or [Kestrel's Listen API](xref:fundamentals/servers/kestrel#endpoint-configuration). Therefore, calls to `UseUrls` or Kestrel's `Listen` API aren't required when using the module. If `UseUrls` or `Listen` is called, Kestrel listens on the port specified when running the app without IIS.
+The ASP.NET Core Module generates a dynamic port to assign to the back-end process. `CreateDefaultBuilder` calls the [UseIISIntegration](/dotnet/api/microsoft.aspnetcore.hosting.webhostbuilderiisextensions.useiisintegration) method, which picks up the dynamic port and configures Kestrel to listen on `http://localhost:{dynamicPort}/`. This overrides other URL configurations, such as calls to `UseUrls` or [Kestrel's Listen API](xref:fundamentals/servers/kestrel#endpoint-configuration). Therefore, calls to `UseUrls` or Kestrel's `Listen` API aren't required when using the module. If `UseUrls` or `Listen` is called, Kestrel listens on the port specified when running the app without IIS.
 
 # [ASP.NET Core 1.x](#tab/aspnetcore1x)
 
@@ -61,7 +55,7 @@ If `UseUrls` is called in an ASP.NET Core 1.0 app, call it **before** calling `U
 
 ---
 
-For more information on hosting, see [Hosting in ASP.NET Core](xref:fundamentals/hosting).
+For more information on hosting, see [Host in ASP.NET Core](xref:fundamentals/host/index).
 
 ### IIS options
 
@@ -86,7 +80,7 @@ The IIS Integration Middleware, which configures Forwarded Headers Middleware, a
 
 ### web.config file
 
-The *web.config* file configures the [ASP.NET Core Module](xref:fundamentals/servers/aspnet-core-module). Creating, transforming, and publishing *web.config* is handled by the .NET Core Web SDK (`Microsoft.NET.Sdk.Web`). The SDK is set  at the top of the project file:
+The *web.config* file configures the [ASP.NET Core Module](xref:fundamentals/servers/aspnet-core-module). Creating, transforming, and publishing the *web.config* file is handled by an MSBuild target (`_TransformWebConfig`) when the project is published. This target is present in the Web SDK targets (`Microsoft.NET.Sdk.Web`). The SDK is set at the top of the project file:
 
 ```xml
 <Project Sdk="Microsoft.NET.Sdk.Web">
@@ -110,7 +104,7 @@ When disabling the Web SDK from transforming the file, the *processPath* and *ar
 
 ### web.config file location
 
-ASP.NET Core apps are hosted in a reverse proxy between IIS and the Kestrel server. In order to create the reverse proxy, the *web.config* file must be present at the content root path (typically the app base path) of the deployed app. This is the same location as the website physical path provided to IIS. The *web.config* file is required at the root of the app to enable the publishing of multiple apps using Web Deploy.
+In order to create the reverse proxy between IIS and the Kestrel server, the *web.config* file must be present at the content root path (typically the app base path) of the deployed app. This is the same location as the website physical path provided to IIS. The *web.config* file is required at the root of the app to enable the publishing of multiple apps using Web Deploy.
 
 Sensitive files exist on the app's physical path, such as *\<assembly>.runtimeconfig.json*, *\<assembly>.xml* (XML Documentation comments), and *\<assembly>.deps.json*. When the *web.config* file is present and and the site starts normally, IIS doesn't serve these sensitive files if they're requested. If the *web.config* file is missing, incorrectly named, or unable to configure the site for normal startup, IIS may serve sensitive files publicly.
 
@@ -169,14 +163,15 @@ Enable the **IIS Management Console** and **World Wide Web Services**.
 1. Install the *.NET Core Hosting Bundle* on the hosting system. The bundle installs the .NET Core Runtime, .NET Core Library, and the [ASP.NET Core Module](xref:fundamentals/servers/aspnet-core-module). The module creates the reverse proxy between IIS and the Kestrel server. If the system doesn't have an Internet connection, obtain and install the [Microsoft Visual C++ 2015 Redistributable](https://www.microsoft.com/download/details.aspx?id=53840) before installing the .NET Core Hosting Bundle.
 
    1. Navigate to the [.NET All Downloads page](https://www.microsoft.com/net/download/all).
-   1. Select the latest non-preview .NET Core runtime from the list (**.NET Core** > **Runtime** > **.NET Core Runtime x.y.z**). Unless you intend to work with preview software, avoid runtimes that have the word "preview" in their link text.
-   1. On the .NET Core runtime download page under **Windows**, select the **Hosting Bundle Installer** link to download the *.NET Core Hosting Bundle*.
+   1. In the **Runtime** column of the table, select the latest non-preview .NET Core runtime from the list (**X.Y Runtime (vX.Y.Z) downloads**). The latest runtime has a **Current** label. Unless you intend to work with preview software, avoid a runtime with the word "preview" or "rc" (Release Candidate) in its link text.
+   1. On the .NET Core runtime download page under **Windows**, select the **Hosting Bundle Installer** link to download the *.NET Core Hosting Bundle* installer.
+   1. Run the installer on the server.
 
    **Important!** If the Hosting Bundle is installed before IIS, the bundle installation must be repaired. Run the Hosting Bundle installer again after installing IIS.
    
    To prevent the installer from installing x86 packages on an x64 OS, run the installer from an administrator command prompt with the switch `OPT_NO_X86=1`.
 
-1. Restart the system or execute **net stop was /y** followed by **net start w3svc** from a command prompt. Restarting IIS picks up a change to the system PATH made by the installer.
+1. Restart the system or execute **net stop was /y** followed by **net start w3svc** from a command prompt. Restarting IIS picks up a change to the system PATH, which is an environment variable, made by the installer.
 
 > [!NOTE]
 > For information on IIS Shared Configuration, see [ASP.NET Core Module with IIS Shared Configuration](xref:host-and-deploy/aspnet-core-module#aspnet-core-module-with-an-iis-shared-configuration).
@@ -369,7 +364,7 @@ ASP.NET Core apps are configured using other configuration providers. For more i
 
 ## Application Pools
 
-When hosting multiple websites on a server, isolate the apps from each other by running each app in its own app pool. The IIS **Add Website** dialog defaults to this configuration. When **Site name** is provided, the text is automatically transferred to the **Application pool** textbox. A new app pool is created using the site name when the site is added.
+When hosting multiple websites on a server, we recommend isolating the apps from each other by running each app in its own app pool. The IIS **Add Website** dialog defaults to this configuration. When **Site name** is provided, the text is automatically transferred to the **Application pool** textbox. A new app pool is created using the site name when the site is added.
 
 ## Application Pool Identity
 

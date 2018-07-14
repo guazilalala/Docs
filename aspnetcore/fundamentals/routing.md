@@ -2,12 +2,8 @@
 title: Routing in ASP.NET Core
 author: ardalis
 description: Discover how ASP.NET Core routing functionality is responsible for mapping an incoming request to a route handler.
-manager: wpickett
 ms.author: riande
 ms.date: 10/14/2016
-ms.prod: asp.net-core
-ms.technology: aspnet
-ms.topic: article
 uid: fundamentals/routing
 ---
 # Routing in ASP.NET Core
@@ -23,7 +19,7 @@ Routing functionality is responsible for mapping an incoming request to a route 
 
 ## Routing basics
 
-Routing uses *routes* (implementations of [IRouter](https://docs.microsoft.com/aspnet/core/api/microsoft.aspnetcore.routing.irouter)) to:
+Routing uses *routes* (implementations of [IRouter](/dotnet/api/microsoft.aspnetcore.routing.irouter)) to:
 
 * map incoming requests to *route handlers*
 
@@ -70,7 +66,7 @@ Routes primarily use the route values provided by the `Values` and `AmbientValue
 
 Tip: Think of `Values` as being a set of overrides for the `AmbientValues`. URL generation tries to reuse route values from the current request to make it easy to generate URLs for links using the same route or route values.
 
-The output of `GetVirtualPath` is a `VirtualPathData`. `VirtualPathData` is a parallel of `RouteData`; it contains the `VirtualPath` for the output URL as well as the some additional properties that should be set by the route.
+The output of `GetVirtualPath` is a `VirtualPathData`. `VirtualPathData` is a parallel of `RouteData`; it contains the `VirtualPath` for the output URL and some additional properties that should be set by the route.
 
 The `VirtualPathData.VirtualPath` property contains the *virtual path* produced by the route. Depending on your needs you may need to process the path further. For instance, if you want to render the generated URL in HTML you need to prepend the base path of the application.
 
@@ -149,7 +145,7 @@ routes.MapRoute(
     dataTokens: new { locale = "en-US" });
 ```
 
-This template will match a URL path like `/Products/5` and will extract the values `{ controller = Products, action = Details, id = 5 }` and the data tokens `{ locale = en-US }`.
+This template matches a URL path like `/en-US/Products/5` and extracts the values `{ controller = Products, action = Details, id = 5 }` and the data tokens `{ locale = en-US }`.
 
 ![Locals Windows tokens](routing/_static/tokens.png)
 
@@ -258,7 +254,6 @@ Literal text other than route parameters (for example, `{id}`) and the path sepa
 URL patterns that attempt to capture a filename with an optional file extension have additional considerations. For example, using the template `files/{filename}.{ext?}` - When both `filename` and `ext` exist, both values will be populated. If only `filename` exists in the URL, the route matches because the trailing period `.` is  optional. The following URLs would match this route:
 
 * `/files/myFile.txt`
-* `/files/myFile.`
 * `/files/myFile`
 
 You can use the `*` character as a prefix to a route parameter to bind to the rest of the URI - this is called a *catch-all* parameter. For example, `blog/{*slug}` would match any URI that started with `/blog` and had any value following it (which would be assigned to the `slug` route value). Catch-all parameters can also match the empty string.
@@ -283,7 +278,17 @@ Using a template is generally the simplest approach to routing. Constraints and 
 
 Tip: Enable [Logging](xref:fundamentals/logging/index) to see how the built in routing implementations, such as `Route`, match requests.
 
-## Route Constraint Reference
+## Reserved routing names
+
+The following keywords are reserved names and can't be used as route names or parameters:
+
+* `action`
+* `area`
+* `controller`
+* `handler`
+* `page`
+
+## Route constraint reference
 
 Route constraints execute when a `Route` has matched the syntax of the incoming URL and tokenized the URL path into route values. Route constraints generally inspect the route value associated via the route template and make a simple yes/no decision about whether or not the value is acceptable. Some route constraints use data outside the route value to consider whether the request can be routed. For example, the `HttpMethodRouteConstraint` can accept or reject a request based on its HTTP verb.
 
@@ -318,7 +323,7 @@ The following table demonstrates some route constraints and their expected behav
 
 ## Regular expressions 
 
-The ASP.NET Core framework adds `RegexOptions.IgnoreCase | RegexOptions.Compiled | RegexOptions.CultureInvariant` to the regular expression constructor. See [RegexOptions Enumeration](https://docs.microsoft.com/dotnet/api/system.text.regularexpressions.regexoptions) for a description of these members.
+The ASP.NET Core framework adds `RegexOptions.IgnoreCase | RegexOptions.Compiled | RegexOptions.CultureInvariant` to the regular expression constructor. See [RegexOptions Enumeration](/dotnet/api/system.text.regularexpressions.regexoptions) for a description of these members.
 
 Regular expressions use delimiters and tokens similar to those used by Routing and the C# language. Regular expression tokens must be escaped. For example, to use the regular expression `^\d{3}-\d{2}-\d{4}$` in Routing, it needs to have the `\` characters typed in as `\\` in the C# source file to escape the `\` string escape character (unless using [verbatim string literals](https://docs.microsoft.com/dotnet/csharp/language-reference/keywords/string). The `{` , `}` , '[' and ']' characters need to be escaped by doubling them to escape the Routing parameter delimiter characters.  The table below shows a regular expression and the escaped version.
 

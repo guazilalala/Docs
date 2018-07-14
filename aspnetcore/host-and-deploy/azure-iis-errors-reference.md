@@ -2,13 +2,9 @@
 title: Common errors reference for Azure App Service and IIS with ASP.NET Core
 author: guardrex
 description: Distinguish common errors when hosting ASP.NET Core apps on Azure Apps Service and IIS.
-manager: wpickett
 ms.author: riande
 ms.custom: mvc
 ms.date: 03/13/2017
-ms.prod: asp.net-core
-ms.technology: aspnet
-ms.topic: article
 uid: host-and-deploy/azure-iis-errors-reference
 ---
 # Common errors reference for Azure App Service and IIS with ASP.NET Core
@@ -193,7 +189,7 @@ Troubleshooting
   * The IIS Integration middleware is referencedby calling the `UseIISIntegration` method on the app's `WebHostBuilder` (ASP.NET Core 1.x)
   * The apps uses the `CreateDefaultBuilder` method (ASP.NET Core 2.x).
   
-  See [Hosting in ASP.NET Core](xref:fundamentals/hosting) for details.
+  See [Host in ASP.NET Core](xref:fundamentals/host/index) for details.
 
 ## Sub-application includes a \<handlers\> section
 
